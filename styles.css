@@ -1,1 +1,102 @@
-/*  your css code here. If applicable */
+body, html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow: hidden;
+  font-family: 'Segoe UI', sans-serif;
+  color: white;
+}
+
+.vid-container video {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  object-fit: cover;
+  z-index: -1;
+}
+
+.player-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+
+#time-select {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin-right: 50px;
+}
+
+#time-select button {
+  background: transparent;
+  border: 2px solid white;
+  color: white;
+  font-size: 1rem;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.circle-container {
+  position: relative;
+  width: 200px;
+  height: 200px;
+  text-align: center;
+}
+
+.play {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 2rem;
+  background: none;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.time-display {
+  margin-top: 20px;
+  font-size: 2rem;
+}
+
+.sound-picker {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  margin-left: 50px;
+}
+
+.sound-picker button {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  border: none;
+  background-color: #3b5998;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.sound-picker button.sun {
+  background-color: #b23b3b;
+}
+
+.sound-picker img {
+  width: 30px;
+  height: 30px;
+}
+
+.progress-ring {
+  transform: rotate(-90deg);
+}
+
+.progress {
+  stroke-dasharray: 565.48;
+  stroke-dashoffset: 565.48;
+  transition: stroke-dashoffset 1s linear;
+}
