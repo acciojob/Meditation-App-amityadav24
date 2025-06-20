@@ -2,29 +2,31 @@ const audio = document.getElementById("meditation-audio");
 const video = document.getElementById("bg-video");
 const playBtn = document.querySelector(".play");
 const timeDisplay = document.querySelector(".time-display");
-const outline = document.querySelector(".progress");
-const circleLength = outline.getTotalLength();
 
-let fakeDuration = 600; // 10 min default
+const smallerBtn = document.getElementById("smaller-mins");
+const mediumBtn = document.getElementById("medium-mins");
+const longBtn = document.getElementById("long-mins");
+
+let fakeDuration = 600; // default 10 min
 let isPlaying = false;
 let timer;
 let elapsed = 0;
 
-outline.style.strokeDasharray = circleLength;
-outline.style.strokeDashoffset = circleLength;
+// Set initial time display
+updateDisplay(fakeDuration);
 
-// Time Selection
-document.getElementById("smaller-mins").addEventListener("click", () => {
+// Time selection events
+smallerBtn.addEventListener("click", () => {
   fakeDuration = 120;
-  resetProgress();
+  reset();
 });
-document.getElementById("medium-mins").addEventListener("click", () => {
+mediumBtn.addEventListener("click", () => {
   fakeDuration = 300;
-  resetProgress();
+  reset();
 });
-document.getElementById("long-mins").addEventListener("click", () => {
+longBtn.addEventListener("click", () => {
   fakeDuration = 600;
-  resetProgress();
+  reset();
 });
 
 // Play/Pause
@@ -32,9 +34,16 @@ playBtn.addEventListener("click", () => {
   isPlaying ? pauseMeditation() : startMeditation();
 });
 
+// Switch between beach and rain
 function switchSound(type) {
-  audio.src = type === "rain" ? "Sounds/rain.mp3" : "Sounds/beach.mp3";
-  video.src = type === "rain" ? "Videos/rain.mp4" : "Videos/beach.mp4";
+  if (type === "beach") {
+    audio.src = "Sounds/beach.mp3";
+    video.src = "Videos/beach.mp4";
+  } else if (type === "rain") {
+    audio.src = "Sounds/rain.mp3";
+    video.src = "Videos/rain.mp4";
+  }
+
   if (isPlaying) {
     audio.play();
     video.play();
@@ -49,15 +58,11 @@ function startMeditation() {
 
   timer = setInterval(() => {
     elapsed++;
-    let remaining = fakeDuration - elapsed;
+    const remaining = fakeDuration - elapsed;
     updateDisplay(remaining);
 
-    let progress = circleLength - (elapsed / fakeDuration) * circleLength;
-    outline.style.strokeDashoffset = progress;
-
     if (remaining <= 0) {
-      pauseMeditation();
-      resetProgress();
+      reset();
     }
   }, 1000);
 }
@@ -70,15 +75,14 @@ function pauseMeditation() {
   clearInterval(timer);
 }
 
-function resetProgress() {
+function reset() {
   pauseMeditation();
   elapsed = 0;
   updateDisplay(fakeDuration);
-  outline.style.strokeDashoffset = circleLength;
 }
 
 function updateDisplay(seconds) {
   const mins = Math.floor(seconds / 60);
-  const secs = seconds % 60;
-  timeDisplay.textContent = `${mins}:${secs < 10 ? "0" + secs : secs}`;
+  const secs = Math.floor(seconds % 60);
+  timeDisplay.textContent = `${mins}:${secs}`;
 }

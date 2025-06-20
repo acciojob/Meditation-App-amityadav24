@@ -6,50 +6,40 @@
   <title>Meditation App</title>
   <link rel="stylesheet" href="style.css" />
 </head>
-<body id="app">
+<body>
+  <div id="app" class="app">
 
-  <!-- Video Background -->
-  <div class="vid-container">
-    <video id="bg-video" loop muted autoplay>
-      <source src="Videos/beach.mp4" type="video/mp4" />
-    </video>
-  </div>
-
-  <!-- Audio & Controls -->
-  <div class="player-container">
-    <!-- Time Selection -->
-    <div id="time-select">
-      <button id="smaller-mins">2 Minutes</button>
-      <button id="medium-mins">5 Minutes</button>
-      <button id="long-mins">10 Minutes</button>
+    <div class="vid-container">
+      <video id="bg-video" loop muted autoplay>
+        <source src="Videos/beach.mp4" type="video/mp4" />
+      </video>
     </div>
 
-    <!-- Center Timer Circle -->
-    <div class="circle-container">
-      <svg class="progress-ring" width="200" height="200">
-        <circle stroke="#fff" stroke-width="10" fill="transparent" r="90" cx="100" cy="100"/>
-        <circle class="progress" stroke="#00BFFF" stroke-width="10" fill="transparent" r="90" cx="100" cy="100"/>
-      </svg>
+    <div class="player-container">
+      <!-- Time Select Buttons -->
+      <div class="time-select">
+        <button id="smaller-mins">2 Minutes</button>
+        <button id="medium-mins">5 Minutes</button>
+        <button id="long-mins">10 Minutes</button>
+      </div>
+
+      <!-- Play and Time Display -->
       <button class="play">▶️</button>
-      <div class="time-display">10:00</div>
+      <div class="time-display">10:0</div>
+
+      <!-- Audio -->
+      <audio id="meditation-audio" loop>
+        <source src="Sounds/beach.mp3" type="audio/mp3" />
+      </audio>
+
+      <!-- Sound Picker -->
+      <div class="sound-picker">
+        <button onclick="switchSound('rain')">Rain</button>
+        <button onclick="switchSound('beach')">Beach</button>
+      </div>
     </div>
 
-    <!-- Sound Picker -->
-    <div class="sound-picker">
-      <button onclick="switchSound('rain')" class="rain">
-        <img src="https://img.icons8.com/ios-filled/50/ffffff/rain.png" alt="Rain" />
-      </button>
-      <button onclick="switchSound('beach')" class="sun">
-        <img src="https://img.icons8.com/ios-filled/50/ffffff/sun.png" alt="Sun" />
-      </button>
-    </div>
   </div>
-
-  <!-- Audio -->
-  <audio id="meditation-audio" loop>
-    <source src="Sounds/beach.mp3" type="audio/mp3" />
-  </audio>
-
   <script src="script.js"></script>
 </body>
 </html>
