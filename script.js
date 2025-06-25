@@ -11,14 +11,17 @@ let isPlaying = false;
 let timer;
 
 audio.muted = false;
+audio.volume = 1;
 
 const updateTimeDisplay = () => {
   const minutes = Math.floor(duration / 60);
   const seconds = duration % 60;
-  timeDisplay.textContent = `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
+  timeDisplay.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
 };
 
 const playMedia = () => {
+  audio.muted = false;
+  audio.volume = 1;
   const playPromise = audio.play();
   video.play();
   playBtn.textContent = "⏸";
