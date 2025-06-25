@@ -1,7 +1,6 @@
-const app = document.getElementById("app");
 const video = document.querySelector(".video-bg");
+const audio = document.getElementById("meditation-audio");
 const playBtn = document.querySelector(".play");
-const sound = new Audio("Sounds/beach.mp3");
 const timeDisplay = document.querySelector(".time-display");
 const timeButtons = document.querySelectorAll("#time-select button");
 const soundButtons = document.querySelectorAll(".sound-picker button");
@@ -19,7 +18,7 @@ playBtn.addEventListener("click", () => {
 });
 
 function playMedia() {
-  sound.play();
+  audio.play();
   video.play();
   playBtn.textContent = "⏸";
   isPlaying = true;
@@ -29,14 +28,14 @@ function playMedia() {
     updateTimeDisplay();
     if (duration <= 0) {
       pauseMedia();
-      sound.currentTime = 0;
+      audio.currentTime = 0;
       video.currentTime = 0;
     }
   }, 1000);
 }
 
 function pauseMedia() {
-  sound.pause();
+  audio.pause();
   video.pause();
   playBtn.textContent = "▶";
   isPlaying = false;
@@ -61,17 +60,17 @@ soundButtons.forEach(button => {
     const soundSrc = button.getAttribute("data-sound");
     const videoSrc = button.getAttribute("data-video");
 
-    sound.src = soundSrc;
-    video.src = videoSrc;
+    audio.src = soundSrc;
+    video.querySelector("source").src = videoSrc;
+    video.load();
 
-    // Restart if playing
     if (isPlaying) {
-      sound.currentTime = 0;
+      audio.currentTime = 0;
       video.currentTime = 0;
       playMedia();
     }
   });
 });
 
-// Set initial time
+// Initial display
 updateTimeDisplay();
