@@ -1,103 +1,85 @@
-const sound = document.getElementById("sound");
-const video = document.getElementById("bgVideo");
-const play = document.querySelector(".play");
+const app = document.getElementById("app");
+const video = document.querySelector(".video");
+const audio = document.querySelector(".audio");
+const playButton = document.querySelector(".play");
 const timeDisplay = document.querySelector(".time-display");
 const timeButtons = document.querySelectorAll("#time-select button");
-const soundPicker = document.querySelectorAll(".sound-picker button");
+const soundButtons = document.querySelectorAll(".sound-picker button");
 
 let duration = 600; // default 10 minutes
-let currentSound = "./Sounds/beach.mp3";
-let currentVideo = "./Sounds/beach.mp4";
-let isPlaying = false;
+let currentTime = 0;
 let timer;
+let isPlaying = false;
 
-// Set initial display
-timeDisplay.textContent = formatTime(duration);
-
-// Time selection buttons
-timeButtons.forEach((btn) => {
-  btn.addEventListener("click", () => {
-    if (btn.id === "smaller-mins") duration = 120;
-    else if (btn.id === "medium-mins") duration = 300;
-    else if (btn.id === "long-mins") duration = 600;
-
-    resetTimer();
+// Time select buttons
+timeButtons.forEach(button => {
+  button.addEventListener("click", () => {
+    duration = parseInt(button.getAttribute("data-time"));
+    updateTimeDisplay(duration);
+    reset();
   });
 });
 
-// Play/Pause toggle
-play.addEventListener("click", async () => {
-  if (!isPlaying) {
-    isPlaying = true;
-    play.textContent = "Pause";
-    try {
-      await sound.play();
+// Sound/video switch buttons
+soundButtons.forEach(button => {
+  button.addEventListener("click", () => {
+    const soundSrc = button.getAttribute("data-sound");
+    const videoSrc = button.getAttribute("data-video");
+
+    audio.src = soundSrc;
+    video.src = videoSrc;
+
+    reset();
+    if (isPlaying) {
+      audio.play();
       video.play();
-    } catch (err) {
-      console.error("Audio play failed:", err);
     }
+  });
+});
+
+// Play/Pause button
+playButton.addEventListener("click", () => {
+  if (!isPlaying) {
+    audio.play();
+    video.play();
     startTimer();
+    playButton.textContent = "Pause";
   } else {
-    isPlaying = false;
-    play.textContent = "Play";
-    sound.pause();
+    audio.pause();
     video.pause();
     clearInterval(timer);
+    playButton.textContent = "Play";
   }
+  isPlaying = !isPlaying;
 });
 
-// Sound switch
-soundPicker.forEach((btn) => {
-  btn.addEventListener("click", () => {
-    const soundName = btn.getAttribute("data-sound");
-    const videoName = btn.getAttribute("data-video");
-
-    currentSound = `./Sounds/${soundName}.mp3`;
-    currentVideo = `./Sounds/${videoName}.mp4`;
-
-    sound.src = currentSound;
-    video.src = currentVideo;
-
-    if (isPlaying) {
-      sound.play();
-      video.play();
-    }
-  });
-});
-
-// Format time as mm:ss
-function formatTime(sec) {
-  const minutes = Math.floor(sec / 60);
-  const seconds = sec % 60;
-  return `${minutes}:${seconds.toString().padStart(2, "0")}`;
+function updateTimeDisplay(timeLeft) {
+  const minutes = Math.floor(timeLeft / 60);
+  const seconds = Math.floor(timeLeft % 60);
+  timeDisplay.textContent = `${minutes}:${seconds}`;
 }
 
-// Reset display
-function resetTimer() {
-  clearInterval(timer);
-  isPlaying = false;
-  play.textContent = "Play";
-  sound.pause();
-  sound.currentTime = 0;
-  video.pause();
-  timeDisplay.textContent = formatTime(duration);
-}
-
-// Timer logic
 function startTimer() {
-  let remaining = duration;
-  timeDisplay.textContent = formatTime(remaining);
-
+  currentTime = 0;
   timer = setInterval(() => {
-    remaining--;
-    timeDisplay.textContent = formatTime(remaining);
-
-    if (remaining <= 0) {
+    currentTime++;
+    updateTimeDisplay(duration - currentTime);
+    if (currentTime >= duration) {
       clearInterval(timer);
-      sound.pause();
+      audio.pause();
       video.pause();
-      play.textContent = "Play";
       isPlaying = false;
+      playButton.textContent = "Play";
     }
   }, 1000);
+}
+
+function reset() {
+  clearInterval(timer);
+  isPlaying = false;
+  playButton.textContent = "Play";
+  updateTimeDisplay(duration);
+  audio.pause();
+  video.pause();
+  audio.currentTime = 0;
 }

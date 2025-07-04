@@ -1,38 +1,44 @@
 body, html {
   margin: 0;
   padding: 0;
-  height: 100%;
-  font-family: sans-serif;
+  font-family: Arial, sans-serif;
+  background: #000;
+  color: #fff;
+  text-align: center;
+}
+
+#app {
+  position: relative;
+  height: 100vh;
+  overflow: hidden;
 }
 
 .vid-container video {
   position: fixed;
   top: 0;
   left: 0;
+  object-fit: cover;
   width: 100%;
   height: 100%;
-  object-fit: cover;
   z-index: -1;
 }
 
 .player-container {
   position: relative;
   z-index: 2;
-  text-align: center;
-  padding-top: 50px;
-  color: white;
-}
-
-.time-select button,
-.sound-picker button,
-.play {
-  padding: 10px 20px;
-  margin: 10px;
-  font-size: 16px;
-  cursor: pointer;
+  top: 20%;
 }
 
 .time-display {
-  font-size: 40px;
-  margin: 20px;
+  font-size: 48px;
+  margin: 20px 0;
+}
+
+.sound-picker button,
+#time-select button,
+.play {
+  margin: 10px;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
 }
