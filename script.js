@@ -1,99 +1,80 @@
-const video = document.querySelector(".video");
-const audio = document.querySelector(".audio");
-const playButton = document.querySelector(".play");
-const timeDisplay = document.querySelector(".time-display");
-const timeButtons = document.querySelectorAll(".time-select button");
-const soundButtons = document.querySelectorAll(".sound-picker button");
+const videoElement = document.getElementById('meditation-video');
+const audioElement = document.getElementById('meditation-audio');
+const timeDisplay = document.querySelector('.time-display');
+const playPauseBtn = document.getElementById('play-pause-btn');
+const switchSoundBtn = document.getElementById('switch-sound');
 
-let duration = 600; // default 10 minutes
-let currentTime = 0;
-let timer = null;
+let meditationTime = 600; // Default to 10 minutes in seconds
 let isPlaying = false;
+let currentSound = 'beach'; // Default sound
 
-// Handle time selection
-timeButtons.forEach(button => {
-  button.addEventListener("click", () => {
-    duration = parseInt(button.getAttribute("data-time"));
-    updateTimeDisplay(duration);
-    reset();
-  });
-});
+// Function to update the time display
+function updateTimeDisplay() {
+    const minutes = Math.floor(meditationTime / 60);
+    const seconds = meditationTime % 60;
+    timeDisplay.textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+}
 
-// Handle sound/video mode switching
-soundButtons.forEach(button => {
-  button.addEventListener("click", () => {
-    const soundSrc = button.getAttribute("data-sound");
-    const videoSrc = button.getAttribute("data-video");
-
-    audio.src = soundSrc;
-    video.src = videoSrc;
-
-    reset();
+// Function to handle play/pause
+playPauseBtn.addEventListener('click', () => {
     if (isPlaying) {
-      audio.play().then(() => {
-        video.play();
-      });
+        audioElement.pause();
+        videoElement.pause();
+    } else {
+        audioElement.play();
+        videoElement.play();
+        startTimer();
     }
-  });
+    isPlaying = !isPlaying;
 });
 
-// Play/Pause functionality
-playButton.addEventListener("click", () => {
-  if (!isPlaying) {
-    audio.play().then(() => {
-      video.play();
-      startTimer();
-      playButton.textContent = "Pause";
-      isPlaying = true;
-    });
-  } else {
-    audio.pause();
-    video.pause();
-    clearInterval(timer);
-    playButton.textContent = "Play";
-    isPlaying = false;
-  }
+// Function to switch sounds
+switchSoundBtn.addEventListener('click', () => {
+    if (currentSound === 'beach') {
+        currentSound = 'rain';
+        audioElement.src = 'Sounds/rain.mp3';
+        videoElement.src = 'video/rain.mp4';
+    } else {
+        currentSound = 'beach';
+        audioElement.src = 'Sounds/beach.mp3';
+        videoElement.src = 'video/beach.mp4';
+    }
+    if (isPlaying) {
+        audioElement.play();
+        videoElement.play();
+    }
 });
 
-// Timer logic
+// Function to set meditation time
+document.getElementById('smaller-mins').addEventListener('click', () => {
+    meditationTime = 120; // 2 minutes
+    updateTimeDisplay();
+});
+
+document.getElementById('medium-mins').addEventListener('click', () => {
+    meditationTime = 300; // 5 minutes
+    updateTimeDisplay();
+});
+
+document.getElementById('long-mins').addEventListener('click', () => {
+    meditationTime = 600; // 10 minutes
+    updateTimeDisplay();
+});
+
+// Timer function
 function startTimer() {
-  currentTime = 0;
-  clearInterval(timer);
-  timer = setInterval(() => {
-    currentTime++;
-    const remaining = duration - currentTime;
-    updateTimeDisplay(remaining);
-
-    if (currentTime >= duration) {
-      clearInterval(timer);
-      audio.pause();
-      video.pause();
-      playButton.textContent = "Play";
-      isPlaying = false;
-    }
-  }, 1000);
+    const timerInterval = setInterval(() => {
+        if (meditationTime <= 0) {
+            clearInterval(timerInterval);
+            audioElement.pause();
+            videoElement.pause();
+            isPlaying = false;
+            return;
+        }
+        meditationTime--;
+        updateTimeDisplay();
+    }, 1000);
 }
 
-// Update time display
-function updateTimeDisplay(seconds) {
-  const min = Math.floor(seconds / 60);
-  const sec = Math.floor(seconds % 60);
-  timeDisplay.textContent = `${min}:${sec}`;
-}
-
-// Reset all state
-function reset() {
-  clearInterval(timer);
-  audio.pause();
-  video.pause();
-  audio.currentTime = 0;
-  video.currentTime = 0;
-  isPlaying = false;
-  playButton.textContent = "Play";
-  updateTimeDisplay(duration);
-}
-
-// Handle play() interruptions in Cypress
-window.addEventListener("unhandledrejection", (e) => {
-  e.preventDefault();
-});
+// Initialize time display
+updateTimeDisplay();
